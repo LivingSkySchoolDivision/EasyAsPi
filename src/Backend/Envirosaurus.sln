@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Envirosaurus.Core", "Enviro
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Envirosaurus.Web", "Envirosaurus.Web\Envirosaurus.Web.csproj", "{F203CD92-D0B8-4E4E-9A19-68ACF61E9641}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Envirosaurus.DB", "Envirosaurus.DB\Envirosaurus.DB.csproj", "{338B3827-588A-42A5-A488-E52FB8873CFB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LSSD.MongoDB", "LSSD.MongoDB\LSSD.MongoDB.csproj", "{AACE128C-BFA1-4CEC-941B-D3DEAC77BB95}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,9 +32,9 @@ Global
 		{F203CD92-D0B8-4E4E-9A19-68ACF61E9641}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F203CD92-D0B8-4E4E-9A19-68ACF61E9641}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F203CD92-D0B8-4E4E-9A19-68ACF61E9641}.Release|Any CPU.Build.0 = Release|Any CPU
-		{338B3827-588A-42A5-A488-E52FB8873CFB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{338B3827-588A-42A5-A488-E52FB8873CFB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{338B3827-588A-42A5-A488-E52FB8873CFB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{338B3827-588A-42A5-A488-E52FB8873CFB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AACE128C-BFA1-4CEC-941B-D3DEAC77BB95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AACE128C-BFA1-4CEC-941B-D3DEAC77BB95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AACE128C-BFA1-4CEC-941B-D3DEAC77BB95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AACE128C-BFA1-4CEC-941B-D3DEAC77BB95}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
