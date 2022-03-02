@@ -21,19 +21,19 @@ The following components make up a sensor module:
 
 The API should _not_ be accessible to the Internet, as it has _no_ security of any kind built in.
 
- ## Getting a list of sensors
+ ## Retrieving a list of sensors
 
  ```
  /Sensors
  ```
 
- ## Getting past sensor readings
+ ## Retrieving sensor readings for a sensor
  ```
  /SensorReading/00000000-0000-0000-0000-000000000000                
  ```
  Where `00000000-0000-0000-0000-000000000000` is the GUID of the sensor you wish to retrieve readings from.
 
- ## Sending data from the sensor to the API
+ ## Sending data from the sensor Pi to the API
  Do a _POST_ HTTP request to `/SensorReading`, with a payload that looks like this:
 
 ```json
