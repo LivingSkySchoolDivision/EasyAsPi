@@ -61,10 +61,10 @@ The API should _not_ be accessible to the Internet, as it has _no_ security of a
   "nH3AlarmHigh": false,
   "noiseAlarmHigh": false
 }
+```
 
 The API will automatically create a new `Sensor` object for the associated sensor if it does not exist already - this is based on the serial number given in the sensor reading payload.
 
-```
 All fields are optional _except_ `deviceSerialNumber`, though the API will reject payloads that do not have enough sensor readings in them. 
 
 The following is would be considered a minimum viable payload, assuming a requirement of 3 data points:
