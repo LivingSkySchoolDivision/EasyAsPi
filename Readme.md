@@ -84,7 +84,7 @@ If accepted, the API will always respond with an HTTP status 200, and the follow
 
 ```json
 {
-	"assignedNumber": 0
+  "assignedNumber": 0
 }
 ```
 
