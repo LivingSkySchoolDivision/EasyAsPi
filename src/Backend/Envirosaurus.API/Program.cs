@@ -18,8 +18,7 @@ builder.Services.AddSingleton<IRepository<SensorReading>, MongoRepository<Sensor
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Configuration.AddEnvironmentVariables();
+builder.Configuration.AddEnvironmentVariables(); // I don't think this is neccesary anymore but it's here anyway
 
 var app = builder.Build();
 
