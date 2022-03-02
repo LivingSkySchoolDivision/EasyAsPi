@@ -1,3 +1,4 @@
+using Envirosaurus.API.Services;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Envirosaurus.API.Controllers;
@@ -7,16 +8,18 @@ namespace Envirosaurus.API.Controllers;
 public class SensorsController : ControllerBase
 {
     private readonly ILogger<SensorsController> _logger;
+    private readonly SensorService _repo;
 
-    public SensorsController(ILogger<SensorsController> logger)
+    public SensorsController(ILogger<SensorsController> logger, SensorService sensorService)
     {
         _logger = logger;
+        _repo = sensorService;
     }
 
     [HttpGet]
     public IEnumerable<Sensor> Get()
     {
-        return new List<Sensor>();
+        return _repo.GetAll();
     }
 
     
