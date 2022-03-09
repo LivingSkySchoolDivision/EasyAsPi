@@ -29,7 +29,7 @@ public class SensorReadingController : ControllerBase
 
         if (sensor != null) 
         {
-            return Ok(_readingRepo.GetForSensor(sensor));
+            return Ok(_readingRepo.GetForSensor(sensor).OrderByDescending(x => x.TimestampUTC).Take(50));
         }
         
         return NotFound();        
