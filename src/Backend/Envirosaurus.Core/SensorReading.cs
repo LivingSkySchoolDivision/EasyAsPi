@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace Envirosaurus;
 
 public class SensorReading : IGUIDable
@@ -11,9 +13,7 @@ public class SensorReading : IGUIDable
 
     // Payload from the sensors:
     public string DeviceSerialNumber { get; set; }
-
     
-    public string? DeviceModel { get; set; }   
     public decimal? TemperatureCelsius { get; set; } 
     public decimal? HumidityPercent { get; set; }
     public decimal? Pressure { get; set; }
@@ -35,9 +35,11 @@ public class SensorReading : IGUIDable
     
 
     // Alternate names for sensors:
-    
+    [JsonIgnore]
     public decimal? NitrogenDioxideLevel { get { return this.OxidisingGasLevel; }}
+    [JsonIgnore]
     public decimal? CarbonMonoxideLevel { get { return this.ReducingGasLevel; }}
+    [JsonIgnore]
     public decimal? AmmoniaLevel { get { return this.NH3Level; }}
     
 
