@@ -35,7 +35,7 @@ public class HeartbeatController : ControllerBase
 
                 // Find the current version number to return to the client
                 // We don't have a good way to do this right now, so just return a standard string
-                response.VersionNumber = "EASYASPI002";
+                response.VersionNumber = "EASYASPI003";
 
 
                 // Check to see if this sensor exists already.
