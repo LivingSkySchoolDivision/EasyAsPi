@@ -22,5 +22,16 @@ public class SensorsController : ControllerBase
         return _repo.GetAll();
     }
 
+    [HttpGet("{guid}")]
+    public IActionResult Get(Guid guid)
+    {
+        Sensor detectedSensor = _repo.Get(guid);
+        if (detectedSensor != null) {
+            return Ok(detectedSensor);
+        } else {
+            return NotFound();
+        }
+    }
+
     
 }
