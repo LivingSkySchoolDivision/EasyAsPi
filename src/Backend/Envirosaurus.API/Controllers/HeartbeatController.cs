@@ -20,7 +20,7 @@ public class HeartbeatController : ControllerBase
         _sensorRepo = sensorService;
     }
 
-    
+
     [HttpPost]
     public IActionResult Post(SensorHeartbeat Heartbeat)
     {
@@ -44,23 +44,26 @@ public class HeartbeatController : ControllerBase
                 if (detectedSensors.Count > 0)
                 {
                     foreach(Sensor sensor in detectedSensors) {
-                        response.AssignedNumber = sensor.AssignedNumber;                    
+                        response.AssignedNumber = sensor.AssignedNumber;
+                        sensor.LastHeartbeatUTC = DateTime.UtcNow;
+                        _sensorRepo.Update(sensor);
                     }
 
                     return Ok(response);
                 } else {
                     int newSensorID = _sensorRepo.GetNextID();
 
-                    Sensor newSensor = new Sensor() 
+                    Sensor newSensor = new Sensor()
                     {
                         DeviceSerialNumber = Heartbeat.DeviceSerialNumber,
-                        
+
                         AssignedNumber = newSensorID,
                         DeviceModel = Heartbeat.DeviceModel ?? string.Empty,
                         DeviceFriendlyName = $"{newSensorID.ToString("D3")}-{Heartbeat.DeviceSerialNumber}",
-                        DeviceDescription = ""                    
+                        DeviceDescription = "",
+                        LastHeartbeatUTC = DateTime.UtcNow
                     };
-                                    
+
                     _sensorRepo.Insert(newSensor);
 
                     response.AssignedNumber = newSensorID;

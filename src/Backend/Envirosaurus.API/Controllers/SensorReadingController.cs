@@ -8,7 +8,8 @@ namespace Envirosaurus.API.Controllers;
 public class SensorReadingController : ControllerBase
 {
     private readonly ILogger<SensorReadingController> _logger;
-    private readonly SensorReadingService _readingRepo; private readonly SensorService _sensorRepo;
+    private readonly SensorReadingService _readingRepo; 
+    private readonly SensorService _sensorRepo;
 
     // Require that a sensor reading has at least this many fields with data, or reject it.
     private const int _requiredDataPointsBeforeRejection = 1;
@@ -46,6 +47,15 @@ public class SensorReadingController : ControllerBase
             if (validateIncomingReading(Reading))
             {
                 _readingRepo.Insert(Reading);
+
+                // Try to find a corresponding sensor entry and update it
+                // It's ok if none exists yet
+                List<Sensor> detectedSensors = _sensorRepo.Find(x => x.DeviceSerialNumber == Reading.DeviceSerialNumber).ToList();
+                foreach(Sensor sensor in detectedSensors) {                    
+                    sensor.LastSensorReadingUTC = DateTime.UtcNow;
+                    _sensorRepo.Update(sensor);
+                }
+
                 return Ok(new SensorReadingResponse());
             }
         }

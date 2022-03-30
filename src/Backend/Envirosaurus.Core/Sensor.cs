@@ -8,5 +8,7 @@ public class Sensor : IGUIDable
     public int AssignedNumber { get; set; }     
     public string DeviceFriendlyName { get; set; } = string.Empty;
     public string DeviceDescription { get; set; } = string.Empty;
+    public DateTime? LastHeartbeatUTC { get; set; }
+    public DateTime? LastSensorReadingUTC { get; set; }
     
 }
