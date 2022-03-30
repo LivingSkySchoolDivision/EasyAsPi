@@ -4,6 +4,12 @@
     <TargetFramework>net6.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>96bc1562-b6bc-4fe7-9a79-6b1d2a8561c5</UserSecretsId>
   </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Envirosaurus.Core\Envirosaurus.Core.csproj" />
+    <ProjectReference Include="..\LSSD.MongoDB\LSSD.MongoDB.csproj" />
+  </ItemGroup>
 
 </Project>
