@@ -35,8 +35,7 @@ public class HeartbeatController : ControllerBase
 
                 // Find the current version number to return to the client
                 // We don't have a good way to do this right now, so just return a standard string
-                response.VersionNumber = "EASYASPI003-1";
-
+                response.VersionNumber = GlobalSettings.Version;
 
                 // Check to see if this sensor exists already.
                 // If it doesn't, create a new one
@@ -46,6 +45,7 @@ public class HeartbeatController : ControllerBase
                     foreach(Sensor sensor in detectedSensors) {
                         response.AssignedNumber = sensor.AssignedNumber;
                         sensor.LastHeartbeatUTC = DateTime.UtcNow;
+                        sensor.LastSeenClientVersion = Heartbeat.DeviceVersion;
                         _sensorRepo.Update(sensor);
                     }
 
