@@ -33,5 +33,26 @@ public class SensorsController : ControllerBase
         }
     }
 
+    [HttpGet("BySerial/{serial}")]
+    public IActionResult Get(string serial)
+    {
+        Sensor? detectedSensor = _repo.Find(x => x.DeviceSerialNumber == serial).FirstOrDefault();
+        if (detectedSensor != null) {
+            return Ok(detectedSensor);
+        } else {
+            return NotFound();
+        }
+    }
+
+    [HttpGet("ByNumber/{number}")]
+    public IActionResult Get(int number)
+    {
+        Sensor? detectedSensor = _repo.Find(x => x.AssignedNumber == number).FirstOrDefault();
+        if (detectedSensor != null) {
+            return Ok(detectedSensor);
+        } else {
+            return NotFound();
+        }
+    }
     
 }
