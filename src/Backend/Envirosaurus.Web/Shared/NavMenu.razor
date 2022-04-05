@@ -1,39 +1,14 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="">Envirosaurus.Web</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-    </div>
+﻿<style type="text/css">
+    .navmenu_bar { width: 100%; background: #F4F4F4; color: #333333; padding: 10px; font-size: 120%; }
+    .nav-link { display: inline; color: inherit !important;}
+    .spacer { width: 50px; display: inline-block; }
+</style>
+
+<div class="navmenu_bar">
+<b>@GlobalSettings.ProductName</b>
+    <div class="spacer"></div>
+    <NavLink class="nav-link" href="" Match="NavLinkMatch.All">Home</NavLink>
+    <NavLink class="nav-link" href="/sensors" Match="NavLinkMatch.All">Sensors</NavLink>
+    <!--<NavLink class="nav-link" href="/facilities" Match="NavLinkMatch.All">Facilities and Maps</NavLink>-->
+    <!--<NavLink class="nav-link" href="/dashboards" Match="NavLinkMatch.All">Dashboards</NavLink>-->
 </div>
-
-<div class="@NavMenuCssClass" @onclick="ToggleNavMenu">
-    <nav class="flex-column">
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="counter">
-                <span class="oi oi-plus" aria-hidden="true"></span> Counter
-            </NavLink>
-        </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="fetchdata">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Fetch data
-            </NavLink>
-        </div>
-    </nav>
-</div>
-
-@code {
-    private bool collapseNavMenu = true;
-
-    private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
-
-    private void ToggleNavMenu()
-    {
-        collapseNavMenu = !collapseNavMenu;
-    }
-}

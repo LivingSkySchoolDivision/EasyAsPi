@@ -1,0 +1,64 @@
+@using Envirosaurus;
+
+@code {
+    [Parameter]
+    public Sensor sensor { get; set; }
+}
+
+<style type="text/css">
+    .heading { font-weight: bold;}
+    .value { font-family: monospace; }
+    .version_icon {
+        width: 16px;
+        margin-left: 2px;
+        margin-top: -5px;
+        display: inline;        
+    }
+</style>
+
+<div style="width: 800px;">
+    
+<div class="row">
+    <div class="heading col-4">GUID</div>
+    <div class="value col-8">@sensor.Id</div>
+</div>
+
+<div class="row">
+    <div class="heading col-4">Assigned Number</div>
+    <div class="value col-8">@sensor.AssignedNumber.ToString("000")</div>
+</div>
+
+<div class="row">
+    <div class="heading col-4">Serial Number</div>
+    <div class="value col-8">@sensor.DeviceSerialNumber</div>
+</div>
+
+<div class="row">
+    <div class="heading col-4">Friendly Name</div>
+    <div class="value col-8">@sensor.DeviceFriendlyName</div>
+</div>
+
+<div class="row">
+    <div class="heading col-4">Description</div>
+    <div class="value col-8">@sensor.DeviceDescription</div>
+</div>
+
+<div class="row">
+    <div class="heading col-4">Last heartbeat (UTC)</div>
+    <div class="value col-8">@sensor.LastHeartbeatUTC</div>
+</div>
+<div class="row">
+    <div class="heading col-4">Last sensor reading (UTC)</div>
+    <div class="value col-8">@sensor.LastSensorReadingUTC</div>
+</div>
+<div class="row">
+    <div class="heading col-4">Last seen version</div>
+    <div class="value col-8">
+        @if (sensor.LastSeenClientVersion == GlobalSettings.Version) {
+                <img class="version_icon" src="img/checkmark.svg">
+        }&nbsp;@sensor.LastSeenClientVersion
+    </div>
+</div>
+
+
+</div>

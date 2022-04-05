@@ -1,0 +1,37 @@
+@page "/sensor/{sensorguid}"
+@using Envirosaurus.Web.Components
+@using Services
+
+@code {
+    [Inject]
+    SensorService _sensorService { get; set; }
+    SensorReadingService _sensorReadingService { get; set; }
+
+    [Parameter]
+    public string sensorguid {get;set;}
+}
+<PageTitle>@GlobalSettings.ProductName - Sensor Details</PageTitle>
+
+<style type="text/css">
+</style>
+
+@if(!string.IsNullOrEmpty(sensorguid)) {
+    Guid sensorParsedGuid = Guid.Parse(sensorguid);
+    Sensor thisSensor = _sensorService.Get(sensorParsedGuid);
+    if (thisSensor != null) {
+        <h1>Sensor Details</h1>
+        <br/>
+        <SensorDetails sensor=@thisSensor />
+        <!--
+            <br/>
+        <h2>Last readings</h2>
+        <br/>
+        <h2>Previous data log</h2>
+        -->
+    } else {
+        <h1>Sensor not found</h1>
+    }
+} else {
+    <h1>Sensor not found</h1>
+}
+

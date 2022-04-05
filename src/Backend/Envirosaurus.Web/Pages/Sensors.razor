@@ -1,0 +1,54 @@
+@page "/sensors"
+@using Services
+
+@code {
+    [Inject]
+    SensorService _SensorService { get; set; }
+}
+<PageTitle>@GlobalSettings.ProductName - Sensors</PageTitle>
+
+<style type="text/css">
+    .table tr:hover {
+        background: #FFE13C;
+    }    
+    .table td {
+        padding: 5px;
+        border-bottom: 1px dotted rgba(0,0,0,0.2);
+    }
+    .version_icon {
+        width: 30px;
+        display: inline;
+    }
+</style>
+
+<h1>Sensors</h1>
+
+<table class="table">
+    <thead>
+        <tr>            
+            <th>Serial Number</th>
+            <th>Assigned Number</th>
+            <th>Friendly Name</th>
+            <th>Version</th>
+            <th>Last Heartbeat (UTC)</th>
+            <th>Last Sensor Data (UTC)</th>
+        </tr>
+    </thead>
+
+@foreach (Sensor sensor in _SensorService.GetAll())
+{
+    <tr>
+        <td><a href="/sensor/@sensor.Id">@sensor.DeviceSerialNumber</a></td>
+        <td>@sensor.AssignedNumber</td>
+        <td>@sensor.DeviceFriendlyName</td>        
+        <td style="white-space: nowrap;">            
+            @sensor.LastSeenClientVersion
+            @if (sensor.LastSeenClientVersion == GlobalSettings.Version) {
+                <img class="version_icon" src="img/checkmark.svg">
+            }            
+        </td>
+        <td>@sensor.LastHeartbeatUTC</td>
+        <td>@sensor.LastSensorReadingUTC</td>
+    </tr>
+}
+</table>
