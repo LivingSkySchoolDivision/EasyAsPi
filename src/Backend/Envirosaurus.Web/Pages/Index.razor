@@ -1,9 +1,20 @@
 ﻿@page "/"
 
-<PageTitle>Index</PageTitle>
+<PageTitle>@GlobalSettings.ProductName</PageTitle>
 
-<h1>Hello, world!</h1>
+<style type="text/css">
+    .heading_container { border: 0; text-align: center; padding: 10px; padding-top: 100px; }
+    .page_container { max-width: 800px; margin-left: auto; margin-right: auto; }
+    .main_title { font-size: 250%; font-weight: bold; } 
+    .main_subtitle {font-size: 125%; }
+</style>
 
-Welcome to your new app.
+<div class="page_container"><!-- page container -->
 
-<SurveyPrompt Title="How is Blazor working for you?" />
+    <div class="heading_container">
+        <div class="main_title">@GlobalSettings.ProductName</div>
+        <div class="main_subtitle">@GlobalSettings.ProductSubName</div>
+    </div>
+    
+
+</div><!-- page container -->
