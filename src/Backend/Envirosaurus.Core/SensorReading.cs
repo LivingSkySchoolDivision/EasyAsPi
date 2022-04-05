@@ -3,13 +3,10 @@ using System.Text.Json.Serialization;
 namespace Envirosaurus;
 
 public class SensorReading : IGUIDable
-{
-    
-    // Fields filled in by the API:
-    
+{    
+    // Fields filled in by the API:    
     public Guid Id { get; set; }
     public DateTime TimestampUTC { get; set; }
-
 
     // Payload from the sensors:
     public string DeviceSerialNumber { get; set; }
@@ -23,15 +20,6 @@ public class SensorReading : IGUIDable
     public decimal? ReducingGasLevel { get; set; } // Carbon Monoxide    
     public decimal? NH3Level { get; set; } // nh3
     public decimal? CPUTemperatureCelsius { get; set; } 
-
-    public bool? TemperatureAlarmHigh { get; set;}
-    public bool? TemperatureAlarmLow { get; set;}
-    public bool? HumidityAlarmHigh { get;set; }
-    public bool? HumidityAlarmLow { get;set; }
-    public bool? OxidisedAlarmHigh { get;set; }
-    public bool? ReducingGasAlarmHigh { get; set; }
-    public bool? NH3AlarmHigh { get; set; }
-    public bool? NoiseAlarmHigh { get; set; }
     
 
     // Alternate names for sensors:
@@ -41,7 +29,4 @@ public class SensorReading : IGUIDable
     public decimal? CarbonMonoxideLevel { get { return this.ReducingGasLevel; }}
     [JsonIgnore]
     public decimal? AmmoniaLevel { get { return this.NH3Level; }}
-    
-
-
 }
