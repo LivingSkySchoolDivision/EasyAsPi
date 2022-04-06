@@ -30,8 +30,8 @@
             <th>Assigned Number</th>
             <th>Friendly Name</th>
             <th>Version</th>
-            <th>Last Heartbeat (UTC)</th>
-            <th>Last Sensor Data (UTC)</th>
+            <th>Last Heartbeat</th>
+            <th>Last Sensor Data</th>
         </tr>
     </thead>
 
@@ -47,8 +47,16 @@
                 <img class="version_icon" src="img/checkmark.svg">
             }            
         </td>
-        <td>@sensor.LastHeartbeatUTC</td>
-        <td>@sensor.LastSensorReadingUTC</td>
+        <td>
+            @if (sensor.LastHeartbeatUTC != null) {
+                @TimeZoneInfo.ConvertTimeFromUtc(sensor.LastHeartbeatUTC ?? DateTime.MinValue.ToUniversalTime(), GlobalSettings.TimeZone)
+            }
+        </td>
+        <td>
+            @if (sensor.LastSensorReadingUTC != null) {
+                @TimeZoneInfo.ConvertTimeFromUtc(sensor.LastSensorReadingUTC ?? DateTime.MinValue.ToUniversalTime(), GlobalSettings.TimeZone)
+            }
+        </td>
     </tr>
 }
 </table>

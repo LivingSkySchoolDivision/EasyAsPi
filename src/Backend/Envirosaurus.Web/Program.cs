@@ -6,6 +6,11 @@ using LSSD.MongoDB;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Set up the timezone that the UI should be in
+if (!string.IsNullOrEmpty(builder.Configuration["Settings:Timezone"])) {
+    GlobalSettings.TimeZone = TimeZoneInfo.FindSystemTimeZoneById(builder.Configuration["Settings:Timezone"]);
+}
+
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();

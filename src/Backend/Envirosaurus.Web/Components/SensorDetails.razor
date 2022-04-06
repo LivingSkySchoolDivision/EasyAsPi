@@ -44,12 +44,20 @@
 </div>
 
 <div class="row">
-    <div class="heading col-4">Last heartbeat (UTC)</div>
-    <div class="value col-8">@sensor.LastHeartbeatUTC</div>
+    <div class="heading col-4">Last heartbeat</div>
+    <div class="value col-8">
+        @if (sensor.LastHeartbeatUTC != null) {
+            @TimeZoneInfo.ConvertTimeFromUtc(sensor.LastHeartbeatUTC ?? DateTime.MinValue.ToUniversalTime(), GlobalSettings.TimeZone)
+        }
+    </div>
 </div>
 <div class="row">
-    <div class="heading col-4">Last sensor reading (UTC)</div>
-    <div class="value col-8">@sensor.LastSensorReadingUTC</div>
+    <div class="heading col-4">Last sensor reading</div>    
+    <div class="value col-8">
+        @if (sensor.LastSensorReadingUTC != null) {
+            @TimeZoneInfo.ConvertTimeFromUtc(sensor.LastSensorReadingUTC ?? DateTime.MinValue.ToUniversalTime(), GlobalSettings.TimeZone)
+        }
+    </div>
 </div>
 <div class="row">
     <div class="heading col-4">Last seen version</div>
