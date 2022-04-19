@@ -1,14 +1,43 @@
 @page "/sensor/{sensorguid}"
 @using Envirosaurus.Web.Components
 @using Services
+@using System.Globalization
 
 @code {
     [Inject]
     SensorService _sensorService { get; set; }
+
+    [Inject]
     SensorReadingService _sensorReadingService { get; set; }
 
+    
     [Parameter]
     public string sensorguid {get;set;}
+
+    Guid sensorParsedGuid = new Guid();
+
+    Sensor thisSensor = new Sensor();
+    List<SensorReading> sensorReadings = new List<SensorReading>();
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(sensorguid)) 
+        {
+            sensorParsedGuid = Guid.Parse(sensorguid);            
+            if (sensorParsedGuid != null || sensorParsedGuid != new Guid()) {
+                thisSensor = _sensorService.Get(sensorParsedGuid);
+                if (thisSensor != null) {
+                    sensorReadings = _sensorReadingService
+                        .Find(x => x.DeviceSerialNumber == thisSensor.DeviceSerialNumber)                                                
+                        .OrderByDescending(x => x.TimestampUTC)
+                        .Take(20)
+                        .ToList();
+                }
+            }
+        }      
+    } 
+
+
 }
 <PageTitle>@GlobalSettings.ProductName - Sensor Details</PageTitle>
 
@@ -16,18 +45,46 @@
 </style>
 
 @if(!string.IsNullOrEmpty(sensorguid)) {
-    Guid sensorParsedGuid = Guid.Parse(sensorguid);
-    Sensor thisSensor = _sensorService.Get(sensorParsedGuid);
     if (thisSensor != null) {
         <h1>Sensor Details</h1>
         <br/>
         <SensorDetails sensor=@thisSensor />
-        <!--
-            <br/>
-        <h2>Last readings</h2>
         <br/>
-        <h2>Previous data log</h2>
-        -->
+        <h2>Last readings</h2>        
+        <table class="table">
+            <thead>
+                <tr>            
+                    <th>Timestamp</th>
+                    <th>Sensor Temperature (&deg;C)</th>
+                    <th>Humidity</th>
+                    <th>Pressure (mmHg)</th>
+                    <th>Lux</th>
+                    <th>Oxidizing</th>
+                    <th>Reducing</th>
+                    <th>Ammonia</th>
+                    <th>CPU Temperature (&deg;C)</th>
+                </tr>
+            </thead>
+
+            @foreach(SensorReading reading in sensorReadings) {
+                <tr>
+                    <td>
+                    @if (@reading.TimestampUTC != null) {
+                        @TimeZoneInfo.ConvertTimeFromUtc(@reading.TimestampUTC, GlobalSettings.TimeZone)
+                    }
+                    </td>
+                    <td>@decimal.Round(reading.TemperatureCelsius ?? (decimal)0,3)</td>
+                    <td>@decimal.Round(reading.HumidityPercent ?? (decimal)0,3)</td>
+                    <td>@decimal.Round(reading.Pressure ?? (decimal)0,3)</td>
+                    <td>@decimal.Round(reading.Lux ?? (decimal)0,3)</td>
+                    <td>@decimal.Round(reading.OxidisingGasLevel ?? (decimal)0,3)</td>
+                    <td>@decimal.Round(reading.ReducingGasLevel ?? (decimal)0,3)</td>
+                    <td>@decimal.Round(reading.NH3Level ?? (decimal)0,3)</td>
+                    <td>@decimal.Round(reading.CPUTemperatureCelsius ?? (decimal)0,3)</td>
+                </tr>
+            }
+        </table>
+
     } else {
         <h1>Sensor not found</h1>
     }

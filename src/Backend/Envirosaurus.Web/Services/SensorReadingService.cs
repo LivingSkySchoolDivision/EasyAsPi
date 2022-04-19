@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Envirosaurus.Web.Services;
@@ -28,6 +29,11 @@ public class SensorReadingService
     public void Insert(SensorReading Reading)
     {
         this._repository.Insert(Reading);
+    }
+
+    public IList<SensorReading> Find(Expression<Func<SensorReading, bool>> predicate)
+    {
+        return this._repository.Find(predicate);
     }
 
 }
