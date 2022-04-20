@@ -10,7 +10,7 @@
     [Inject]
     SensorReadingService _sensorReadingService { get; set; }
 
-    
+
     [Parameter]
     public string sensorguid {get;set;}
 
@@ -21,21 +21,20 @@
 
     protected override void OnInitialized()
     {
-        if (!string.IsNullOrEmpty(sensorguid)) 
+        if (!string.IsNullOrEmpty(sensorguid))
         {
-            sensorParsedGuid = Guid.Parse(sensorguid);            
+            sensorParsedGuid = Guid.Parse(sensorguid);
             if (sensorParsedGuid != null || sensorParsedGuid != new Guid()) {
                 thisSensor = _sensorService.Get(sensorParsedGuid);
                 if (thisSensor != null) {
                     sensorReadings = _sensorReadingService
-                        .Find(x => x.DeviceSerialNumber == thisSensor.DeviceSerialNumber)                                                
+                        .Find(x => x.DeviceSerialNumber == thisSensor.DeviceSerialNumber, 25, x => x.TimestampUTC, true)
                         .OrderByDescending(x => x.TimestampUTC)
-                        .Take(20)
                         .ToList();
                 }
             }
-        }      
-    } 
+        }
+    }
 
 
 }
@@ -50,10 +49,10 @@
         <br/>
         <SensorDetails sensor=@thisSensor />
         <br/>
-        <h2>Last readings</h2>        
+        <h2>Last readings</h2>
         <table class="table">
             <thead>
-                <tr>            
+                <tr>
                     <th>Timestamp</th>
                     <th>Sensor Temperature (&deg;C)</th>
                     <th>Humidity</th>
@@ -73,14 +72,14 @@
                         @TimeZoneInfo.ConvertTimeFromUtc(@reading.TimestampUTC, GlobalSettings.TimeZone)
                     }
                     </td>
-                    <td>@decimal.Round(reading.TemperatureCelsius ?? (decimal)0,3)</td>
-                    <td>@decimal.Round(reading.HumidityPercent ?? (decimal)0,3)</td>
+                    <td>@decimal.Round(reading.TemperatureCelsius ?? (decimal)0,1)&nbsp;&deg;C</td>
+                    <td>@decimal.Round(reading.HumidityPercent ?? (decimal)0,1) %</td>
                     <td>@decimal.Round(reading.Pressure ?? (decimal)0,3)</td>
                     <td>@decimal.Round(reading.Lux ?? (decimal)0,3)</td>
                     <td>@decimal.Round(reading.OxidisingGasLevel ?? (decimal)0,3)</td>
                     <td>@decimal.Round(reading.ReducingGasLevel ?? (decimal)0,3)</td>
                     <td>@decimal.Round(reading.NH3Level ?? (decimal)0,3)</td>
-                    <td>@decimal.Round(reading.CPUTemperatureCelsius ?? (decimal)0,3)</td>
+                    <td>@decimal.Round(reading.CPUTemperatureCelsius ?? (decimal)0,1)&nbsp;&deg;C</td>
                 </tr>
             }
         </table>

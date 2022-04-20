@@ -49,4 +49,9 @@ public class SensorService
         this._repository.Update(Sensor);
     }
 
+    public IList<Sensor> Find(Expression<Func<Sensor, bool>> predicate, int limit, Expression<Func<Sensor, object>> orderby, bool sortdescending)
+    {
+        return this._repository.Find(predicate, limit, orderby, sortdescending);
+    }
+
 }

@@ -6,7 +6,7 @@ namespace Envirosaurus.Web.Services;
 public class SensorReadingService
 {
     private readonly IRepository<SensorReading> _repository;
-    public SensorReadingService (IRepository<SensorReading> Repository) 
+    public SensorReadingService (IRepository<SensorReading> Repository)
     {
         this._repository = Repository;
     }
@@ -34,6 +34,16 @@ public class SensorReadingService
     public IList<SensorReading> Find(Expression<Func<SensorReading, bool>> predicate)
     {
         return this._repository.Find(predicate);
+    }
+
+    public IList<SensorReading> Find(Expression<Func<SensorReading, bool>> predicate, int limit, Expression<Func<SensorReading, object>> orderby, bool sortdescending)
+    {
+        return this._repository.Find(predicate, limit, orderby, sortdescending);
+    }
+
+    public SensorReading GetLastReadingForSensor(string sensorSerialNumber)
+    {
+        return this._repository.Find(x => x.DeviceSerialNumber == sensorSerialNumber, 1, x => x.TimestampUTC, true).FirstOrDefault() ?? new SensorReading();
     }
 
 }

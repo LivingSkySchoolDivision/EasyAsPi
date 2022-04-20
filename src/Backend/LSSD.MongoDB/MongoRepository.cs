@@ -47,6 +47,21 @@ namespace LSSD.MongoDB
             return _collection.AsQueryable<T>().Where(predicate.Compile()).ToList();
         }
 
+        public IList<T> Find(Expression<Func<T, bool>> predicate, int limit, Expression<Func<T, object>> orderby)
+        {
+            return Find(predicate, limit, orderby, false);
+        }
+
+        public IList<T> Find(Expression<Func<T, bool>> predicate, int limit, Expression<Func<T, object>> orderby, bool sortdescending)
+        {
+            if (sortdescending)
+            {
+                return _collection.Find<T>(predicate).SortByDescending(orderby).Limit(limit).ToList<T>();
+            } else {
+                return _collection.Find<T>(predicate).SortBy(orderby).Limit(limit).ToList<T>();
+            }
+        }
+
         public IList<T> GetAll()
         {
             return _collection.Find(_ => true).ToList();
@@ -63,12 +78,12 @@ namespace LSSD.MongoDB
                 {
                     return default(T);
                 }
-            } 
+            }
             catch (FormatException)
             {
                 return default(T);
             }
-            catch 
+            catch
             {
                 throw;
             }
@@ -110,7 +125,7 @@ namespace LSSD.MongoDB
             }
         }
 
-        public void Update(List<T> entities) 
+        public void Update(List<T> entities)
         {
             foreach(T entity in entities)
             {
