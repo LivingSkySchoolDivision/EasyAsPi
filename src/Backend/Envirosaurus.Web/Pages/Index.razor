@@ -1,4 +1,25 @@
 ﻿@page "/"
+@using Services
+@code{    
+    [Inject]
+    SensorService _sensorService { get; set; }
+
+    [Inject]
+    SensorReadingService _sensorReadingService { get; set; }
+
+    Dictionary<string, int> sensorIDMap = new Dictionary<string, int>();
+
+    protected override void OnInitialized()
+    {
+        foreach(Sensor sensor in _sensorService.GetAll())
+        {
+            if (!sensorIDMap.ContainsKey(sensor.DeviceSerialNumber))
+            {
+                sensorIDMap.Add(sensor.DeviceSerialNumber, sensor.AssignedNumber);
+            }
+        }
+    }
+}
 
 <PageTitle>@GlobalSettings.ProductName</PageTitle>
 
@@ -15,6 +36,66 @@
         <div class="main_title">@GlobalSettings.ProductName</div>
         <div class="main_subtitle">@GlobalSettings.ProductSubName</div>
     </div>
-    
+    <br/><br/>
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-center">Last sensor readings</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>Sensor</td>
+                        <td>Timestamp</td>
+                    </tr>
+                </thead>
+
+                @foreach(SensorReading reading in _sensorReadingService.Find(x => !string.IsNullOrEmpty(x.DeviceSerialNumber), 10, x => x.TimestampUTC, true))
+                {                    
+                    <tr>
+                        <td class="text-center">
+                            @if(sensorIDMap.ContainsKey(reading.DeviceSerialNumber))
+                            {
+                                @sensorIDMap[reading.DeviceSerialNumber]
+                            } else {
+                                @reading.DeviceSerialNumber
+                            }
+                            
+                        </td>
+                        <td>
+                            @if (reading.TimestampUTC != null) {
+                                @TimeZoneInfo.ConvertTimeFromUtc(reading.TimestampUTC, GlobalSettings.TimeZone)
+                            }                            
+                        </td>
+                    </tr>
+                }                
+            </table>
+
+        </div>
+        
+        <div class="col-6">
+            <h2 class="text-center">Last heartbeats</h2>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <td>Sensor</td>
+                        <td>Timestamp</td>
+                    </tr>
+                </thead>
+
+                @foreach(Sensor sensor in _sensorService.Find(x => x.LastHeartbeatUTC != null, 10, x => x.LastHeartbeatUTC, true))
+                {
+                    <tr>
+                        <td class="text-center">@sensor.AssignedNumber</td>
+                        <td>
+                            @if (sensor.LastHeartbeatUTC != null) {
+                                @TimeZoneInfo.ConvertTimeFromUtc(sensor.LastHeartbeatUTC ?? DateTime.MinValue.ToUniversalTime(), GlobalSettings.TimeZone)
+                            }                            
+                        </td>
+                    </tr>
+                } 
+                
+            </table>
+        </div>
+        
+    </div>
 
 </div><!-- page container -->
