@@ -57,10 +57,12 @@
                     <th>Sensor Temperature (&deg;C)</th>
                     <th>Humidity</th>
                     <th>Pressure (mmHg)</th>
+                    <th>Pressure (atm)</th>
+                    <th>Pressure (kPa)</th>
                     <th>Lux</th>
-                    <th>Oxidizing</th>
-                    <th>Reducing</th>
-                    <th>Ammonia</th>
+                    <th>Oxidizing Gas</th>
+                    <th>Reducing Gas</th>
+                    <th>Ammonia / NH3</th>
                     <th>CPU Temperature (&deg;C)</th>
                 </tr>
             </thead>
@@ -74,7 +76,9 @@
                     </td>
                     <td>@decimal.Round(reading.TemperatureCelsius ?? (decimal)0,1)&nbsp;&deg;C</td>
                     <td>@decimal.Round(reading.HumidityPercent ?? (decimal)0,1) %</td>
-                    <td>@decimal.Round(reading.Pressure ?? (decimal)0,3)</td>
+                    <td>@decimal.Round(reading.Pressure ?? (decimal)0,3) mmHg</td>
+                    <td>@decimal.Round((decimal)((reading.Pressure ?? (decimal)0)/(decimal)760.0),3) atm</td>
+                    <td>@decimal.Round((decimal)(reading.Pressure ?? (decimal)0) * (decimal)(101.325 / 760.0),3) kPa</td>
                     <td>@decimal.Round(reading.Lux ?? (decimal)0,3)</td>
                     <td>@decimal.Round(reading.OxidisingGasLevel ?? (decimal)0,3)</td>
                     <td>@decimal.Round(reading.ReducingGasLevel ?? (decimal)0,3)</td>

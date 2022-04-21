@@ -7,15 +7,16 @@
     [Inject]
     SensorReadingService _sensorReadingService { get; set; }
 
-    Dictionary<string, int> sensorIDMap = new Dictionary<string, int>();
+    Dictionary<string, Sensor> sensorsBySerial = new Dictionary<string, Sensor>();
+    Dictionary<string, string> sensorGUIDMap = new Dictionary<string, string>();
 
     protected override void OnInitialized()
     {
         foreach(Sensor sensor in _sensorService.GetAll())
         {
-            if (!sensorIDMap.ContainsKey(sensor.DeviceSerialNumber))
+            if (!sensorsBySerial.ContainsKey(sensor.DeviceSerialNumber))
             {
-                sensorIDMap.Add(sensor.DeviceSerialNumber, sensor.AssignedNumber);
+                sensorsBySerial.Add(sensor.DeviceSerialNumber, sensor);
             }
         }
     }
@@ -51,10 +52,10 @@
                 @foreach(SensorReading reading in _sensorReadingService.Find(x => !string.IsNullOrEmpty(x.DeviceSerialNumber), 10, x => x.TimestampUTC, true))
                 {                    
                     <tr>
-                        <td class="text-center">
-                            @if(sensorIDMap.ContainsKey(reading.DeviceSerialNumber))
+                        <td class="text-center">                            
+                            @if(sensorsBySerial.ContainsKey(reading.DeviceSerialNumber))
                             {
-                                @sensorIDMap[reading.DeviceSerialNumber]
+                                <a href="/sensor/@sensorsBySerial[reading.DeviceSerialNumber].Id">@sensorsBySerial[reading.DeviceSerialNumber].AssignedNumber</a>
                             } else {
                                 @reading.DeviceSerialNumber
                             }
@@ -70,7 +71,7 @@
             </table>
 
         </div>
-        
+
         <div class="col-6">
             <h2 class="text-center">Last heartbeats</h2>
             <table class="table">
@@ -84,7 +85,9 @@
                 @foreach(Sensor sensor in _sensorService.Find(x => x.LastHeartbeatUTC != null, 10, x => x.LastHeartbeatUTC, true))
                 {
                     <tr>
-                        <td class="text-center">@sensor.AssignedNumber</td>
+                        <td class="text-center">
+                            <a href="/sensor/@sensor.Id">@sensor.AssignedNumber</a>
+                        </td>
                         <td>
                             @if (sensor.LastHeartbeatUTC != null) {
                                 @TimeZoneInfo.ConvertTimeFromUtc(sensor.LastHeartbeatUTC ?? DateTime.MinValue.ToUniversalTime(), GlobalSettings.TimeZone)
@@ -96,6 +99,42 @@
             </table>
         </div>
         
+    </div>
+        
+    <br/>
+
+    <div class="row">
+        <div class="col">
+            <h2>Sensors that haven't checked in in over 24 hours</h2>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <td>Number</td>
+                    <td>Serial Number</td>
+                    <td>Friendly Name</td>
+                    <td>Last heartbeat</td>
+                </tr>
+            </thead>
+
+            @foreach(Sensor sensor in _sensorService.Find(x => (x.LastHeartbeatUTC < DateTime.UtcNow.AddDays(-1)) || (x.LastHeartbeatUTC == null), 500, x => x.LastHeartbeatUTC, true).ToList().OrderByDescending(x => x.LastHeartbeatUTC).ThenBy(x => x.AssignedNumber))
+            {                    
+                <tr>
+                    <td>@sensor.AssignedNumber</td>
+                    <td><a href="/sensor/@sensor.Id">@sensor.DeviceSerialNumber</a></td>
+                    <td>@sensor.DeviceFriendlyName</td>
+                    <td>
+                        @if (sensor.LastHeartbeatUTC != null) {
+                            @TimeZoneInfo.ConvertTimeFromUtc(sensor.LastHeartbeatUTC ?? DateTime.MinValue.ToUniversalTime(), GlobalSettings.TimeZone).ToString("f");
+                        } else {
+                            <i class="text-muted">Never</i>
+                        }                         
+                    </td>
+                </tr>
+            }                
+        </table>
+
     </div>
 
 </div><!-- page container -->
