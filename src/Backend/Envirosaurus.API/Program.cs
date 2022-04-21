@@ -12,6 +12,9 @@ dotnet user-secrets set "ConnectionStrings:MyConnectionString" "Value"
 
 builder.Configuration.AddEnvironmentVariables(); // I don't think this is neccesary anymore but it's here anyway
 
+// Add CORS policy to allow any client to query this API
+builder.Services.AddCors(options => { options.AddPolicy("Open", builder => builder.AllowAnyOrigin().AllowAnyHeader()); });
+
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddSingleton<SensorService>();
