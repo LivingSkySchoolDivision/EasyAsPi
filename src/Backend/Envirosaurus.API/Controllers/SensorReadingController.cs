@@ -29,7 +29,7 @@ public class SensorReadingController : ControllerBase
 
         if (sensor != null) 
         {
-            return Ok(_readingRepo.GetForSensor(sensor).OrderByDescending(x => x.TimestampUTC).Take(50));
+            return Ok(_readingRepo.Find(x => x.DeviceSerialNumber == sensor.DeviceSerialNumber, 6, x => x.TimestampUTC, true));
         }
         
         return NotFound();        
@@ -61,6 +61,27 @@ public class SensorReadingController : ControllerBase
         }
 
         return BadRequest();
+    }
+    
+    [HttpGet]
+    public IEnumerable<SensorReading> Get()
+    {
+        List<SensorReading> response = new List<SensorReading>();
+
+        // TODO: This loop is expensive as far as database calls, but because of how we've compartmentalized
+        //       the mongo stuff, we can't directly run mongo aggregations here to make this quicker.
+        //       It does work, though, so if this becomes an issue, this note might help find the bottleneck.
+        foreach(Sensor sensor in _sensorRepo.GetAll())
+        {
+            SensorReading lastReading = _readingRepo.GetLastReadingForSensor(sensor.DeviceSerialNumber);
+            if (lastReading != null) {
+                if (lastReading.Id != new Guid()) {
+                    response.Add(lastReading);
+                }
+            }
+        }
+
+        return response;
     }
 
     private bool validateIncomingReading(SensorReading Reading) 

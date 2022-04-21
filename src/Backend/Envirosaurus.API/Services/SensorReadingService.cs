@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Envirosaurus.API.Services;
@@ -28,6 +29,21 @@ public class SensorReadingService
     public void Insert(SensorReading Reading)
     {
         this._repository.Insert(Reading);
+    }
+
+    public IList<SensorReading> Find(Expression<Func<SensorReading, bool>> predicate)
+    {
+        return this._repository.Find(predicate);
+    }
+
+    public IList<SensorReading> Find(Expression<Func<SensorReading, bool>> predicate, int limit, Expression<Func<SensorReading, object>> orderby, bool sortdescending)
+    {
+        return this._repository.Find(predicate, limit, orderby, sortdescending);
+    }
+
+    public SensorReading GetLastReadingForSensor(string sensorSerialNumber)
+    {
+        return this._repository.Find(x => x.DeviceSerialNumber == sensorSerialNumber, 1, x => x.TimestampUTC, true).FirstOrDefault() ?? new SensorReading();
     }
 
 }
