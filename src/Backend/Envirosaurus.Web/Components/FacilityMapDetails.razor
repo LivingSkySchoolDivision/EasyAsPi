@@ -1,0 +1,111 @@
+@using Envirosaurus;
+@using Microsoft.AspNetCore.Hosting
+@inject IWebHostEnvironment Environment
+@using System
+@using System.IO
+
+
+@code {
+    [Parameter]
+    public FacilityMap Map { get; set; }
+
+    private static readonly List<string> allowedContentTypes = new List<string>() {
+        "image/png",
+        "image/jpg",
+        "image/jpeg",
+        "image/gif",
+        "image/bmp",
+        "image/svg+xml"
+        };
+
+    string b64test = string.Empty;
+
+    async Task<FacilityMap> ConvertUploadedFileToStoredImageFile(IBrowserFile file, FacilityMap mapIn)
+    {
+        if (!allowedContentTypes.Contains(file.ContentType)) {
+            throw new Exception("Invalid file type");
+        }
+
+        string tempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+
+        // Copy file to temp path
+        using (FileStream fs = new(tempPath, FileMode.Create))
+        {
+            await file.OpenReadStream(1024 * 1024 * 10).CopyToAsync(fs);
+        }
+
+        // Get the base64 of the file
+        string b64Out = string.Empty;
+        using(FileStream fs = new FileStream(tempPath, FileMode.Open))
+        {
+            byte[] buffer = new byte[fs.Length];
+            fs.Read(buffer, 0, (int)fs.Length);
+            b64Out = Convert.ToBase64String(buffer);
+        }
+
+        // Delete the file
+        File.Delete(tempPath);
+
+        if (mapIn == null)
+        {
+            return new FacilityMap() {
+                MapImageBase64 = b64Out,
+                MapImageContentType = file.ContentType
+            };
+        } else {
+           mapIn.MapImageBase64 = b64Out;
+           mapIn.MapImageContentType = file.ContentType;
+           return mapIn; 
+        }
+    }
+
+    private async Task LoadFiles(InputFileChangeEventArgs e)
+    {
+        foreach(IBrowserFile file in e.GetMultipleFiles(1))
+        {
+            Map = await ConvertUploadedFileToStoredImageFile(file, Map);
+        }
+    }
+}
+
+<style type="text/css">
+    .heading { font-weight: bold;}
+    .value { font-family: monospace; }
+    .version_icon {
+        width: 16px;
+        margin-left: 2px;
+        margin-top: -5px;
+        display: inline;
+    }
+</style>
+<div style="width: 800px;">
+    <div class="row">
+        <div class="heading col-4">GUID</div>
+        <div class="value col-8">@Map.Id</div>
+    </div>
+
+    <div class="row">
+        <div class="heading col-4">Name</div>
+        <div class="value col-8">@Map.Name</div>
+    </div>
+
+    <div class="row">
+        <div class="heading col-4">Map filename</div>
+        <div class="value col-8">
+            <InputFile OnChange="@LoadFiles"></InputFile>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="heading col-4">Weather Station Code</div>
+        <div class="value col-8">@Map.WeatherStationCode</div>
+    </div>
+</div>
+
+@if(!string.IsNullOrEmpty(Map.MapImageBase64)) {
+    <br/><h4>Preview</h4>
+    <i>Shown on a black background. Transparent areas will show as checkered here, but will remain transparent on actual dashboards.</i>
+    <div style="max-width: 1080px; max-height: 1000px; text-align: center; padding: 10px; background-color: black;">
+        <img style="background-image: url('/img/trans_background.png');" src="data:@(@Map.MapImageContentType);base64,@(@Map.MapImageBase64)">
+    </div>
+}

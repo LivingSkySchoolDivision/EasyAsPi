@@ -1,0 +1,22 @@
+@page "/maps/new"
+@using Envirosaurus.Web.Components
+@using Services
+@using System.Globalization
+
+@code {
+    [Inject]
+    FacilityMapService _mapService { get; set; }
+
+    FacilityMap thisMap = new FacilityMap();
+    
+    protected override void OnInitialized()
+    {       
+    }
+
+}
+<PageTitle>@GlobalSettings.ProductName - New Map</PageTitle>
+<h1>Map Details</h1>
+<br/>
+<FacilityMapDetails Map=@thisMap />
+
+

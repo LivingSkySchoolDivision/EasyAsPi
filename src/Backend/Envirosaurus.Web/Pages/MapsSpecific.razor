@@ -1,0 +1,43 @@
+@page "/maps/{mapguid}"
+@using Envirosaurus.Web.Components
+@using Services
+@using System.Globalization
+
+@code {
+    [Inject]
+    FacilityMapService _mapService { get; set; }
+
+    [Parameter]
+    public string mapguid {get;set;}
+
+    Guid mapParsedGuid = new Guid();
+
+    FacilityMap thisMap = new FacilityMap();
+    
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(mapguid))
+        {
+            mapParsedGuid = Guid.Parse(mapguid);
+            if (mapParsedGuid != null || mapParsedGuid != new Guid()) {
+                thisMap = _mapService.Get(mapParsedGuid);                
+            }
+        }
+    }
+
+}
+<PageTitle>@GlobalSettings.ProductName - Map Details</PageTitle>
+
+@if(!string.IsNullOrEmpty(mapguid)) {
+    if (thisMap != null) {
+        <h1>Map Details</h1>
+        <br/>
+        <FacilityMapDetails Map=@thisMap />
+
+    } else {
+        <h1>Sensor not found</h1>
+    }
+} else {
+    <h1>Sensor not found</h1>
+}
+
