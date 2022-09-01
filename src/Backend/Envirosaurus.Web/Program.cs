@@ -13,6 +13,7 @@ if (!string.IsNullOrEmpty(builder.Configuration["Settings:Timezone"])) {
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddControllers();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddSingleton<SensorService>();
 builder.Services.AddSingleton<SensorReadingService>();
@@ -39,5 +40,6 @@ app.UseRouting();
 
 app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
+app.MapControllers();
 
 app.Run();
