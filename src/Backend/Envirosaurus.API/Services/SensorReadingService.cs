@@ -11,11 +11,6 @@ public class SensorReadingService
         this._repository = Repository;
     }
 
-    public IEnumerable<SensorReading> GetAll()
-    {
-        return this._repository.GetAll();
-    }
-
     public SensorReading Get(Guid guid)
     {
         return this._repository.GetById(guid);
@@ -26,9 +21,9 @@ public class SensorReadingService
         return this._repository.Find(x => x.DeviceSerialNumber == sensor.DeviceSerialNumber);
     }
 
-    public void Insert(SensorReading Reading)
+    public Guid Insert(SensorReading Reading)
     {
-        this._repository.Insert(Reading);
+        return this._repository.Insert(Reading);
     }
 
     public IList<SensorReading> Find(Expression<Func<SensorReading, bool>> predicate)
@@ -39,11 +34,6 @@ public class SensorReadingService
     public IList<SensorReading> Find(Expression<Func<SensorReading, bool>> predicate, int limit, Expression<Func<SensorReading, object>> orderby, bool sortdescending)
     {
         return this._repository.Find(predicate, limit, orderby, sortdescending);
-    }
-
-    public SensorReading GetLastReadingForSensor(string sensorSerialNumber)
-    {
-        return this._repository.Find(x => x.DeviceSerialNumber == sensorSerialNumber, 1, x => x.TimestampUTC, true).FirstOrDefault() ?? new SensorReading();
     }
 
 }
