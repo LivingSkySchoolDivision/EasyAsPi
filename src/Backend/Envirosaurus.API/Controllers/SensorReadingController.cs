@@ -46,13 +46,15 @@ public class SensorReadingController : ControllerBase
             // Record the reading
             if (validateIncomingReading(Reading))
             {
-                _readingRepo.Insert(Reading);
+                Guid ReadingID = _readingRepo.Insert(Reading);
+                Reading.Id = ReadingID;
 
                 // Try to find a corresponding sensor entry and update it
                 // It's ok if none exists yet
                 List<Sensor> detectedSensors = _sensorRepo.Find(x => x.DeviceSerialNumber == Reading.DeviceSerialNumber).ToList();
                 foreach(Sensor sensor in detectedSensors) {                    
                     sensor.LastSensorReadingUTC = DateTime.UtcNow;
+                    sensor.LastSensorReading = Reading;
                     _sensorRepo.Update(sensor);
                 }
 
@@ -60,30 +62,9 @@ public class SensorReadingController : ControllerBase
             }
         }
 
-        return BadRequest();
+        return BadRequest("Invalid payload");
     }
     
-    [HttpGet]
-    public IEnumerable<SensorReading> Get()
-    {
-        List<SensorReading> response = new List<SensorReading>();
-
-        // TODO: This loop is expensive as far as database calls, but because of how we've compartmentalized
-        //       the mongo stuff, we can't directly run mongo aggregations here to make this quicker.
-        //       It does work, though, so if this becomes an issue, this note might help find the bottleneck.
-        foreach(Sensor sensor in _sensorRepo.GetAll())
-        {
-            SensorReading lastReading = _readingRepo.GetLastReadingForSensor(sensor.DeviceSerialNumber);
-            if (lastReading != null) {
-                if (lastReading.Id != new Guid()) {
-                    response.Add(lastReading);
-                }
-            }
-        }
-
-        return response;
-    }
-
     private bool validateIncomingReading(SensorReading Reading) 
     {
         int fieldsWithData = 0;

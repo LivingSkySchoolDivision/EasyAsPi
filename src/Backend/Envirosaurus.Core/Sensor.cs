@@ -11,5 +11,6 @@ public class Sensor : IGUIDable
     public DateTime? LastHeartbeatUTC { get; set; }
     public DateTime? LastSensorReadingUTC { get; set; }
     public string? LastSeenClientVersion { get; set; }
+    public SensorReading? LastSensorReading { get; set; }
     
 }
